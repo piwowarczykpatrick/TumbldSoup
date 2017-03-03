@@ -1,11 +1,17 @@
-from bs4 import BeautifulSoup
-import requests
+import urllib.request
+import bs4 as bs
+import re
 
-tagsToSearch = ['drift', 'hoonigan', 'drifting', 'drifted']
+#Input tags to analyze and scrape
+tagsToSearch = 'drift'
+photoPostSubtring = "is_photo post_tumblelog_"
 
-for i in tagsToSearch
-    urlToSearch = 'https://www.tumblr.com' + tagsToSearch
-    tumblrRequest = requests.get(urlToSearch)
+#for tag in tagsToSearch:
+urlToSearch =  urllib.request.urlopen('https://www.tumblr.com/search/' + tagsToSearch).read()
+soup = bs.BeautifulSoup(urlToSearch, "lxml")
 
-    soup = BeautifulSoup(tumblrRequest.content)
+for i in soup.find_all('article', {'class' : re.compile('is_photo post_tumblelog_*')}):
+#for i in soup.select('article[class*=is_photo post_]'):
+    posts = soup
 
+print(posts)
