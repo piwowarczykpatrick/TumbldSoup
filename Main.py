@@ -1,6 +1,7 @@
 import urllib.request
 import bs4 as bs
 import re
+import os
 
 #Input tags to analyze and scrape
 tagsToSearch = 'drift'
@@ -10,6 +11,7 @@ indexOfPopularPosts = []
 j = 0
 listOfNotes = []
 imgLinks = []
+total = 0
 
 #searching the tags above
 urlToSearch =  urllib.request.urlopen('https://www.tumblr.com/search/' + tagsToSearch).read()
@@ -23,19 +25,29 @@ for article in r:
       for tag in article.descendants:
            if hasattr(tag, 'attrs') and 'data-count' in tag.attrs:
                listOfNotes.append(int(tag.attrs['data-count']))
+#print(listOfNotes)
 
 
 #Seperating popular content from content we don't want
 for j in range(len(listOfNotes)):
     if (listOfNotes[j] > avgNotes):
         indexOfPopularPosts.append(j)
-        print (j,listOfNotes[j])
+        #print (j,listOfNotes[j])
 
 
-#Downloading popular photos
+#Populating list of popular images in the same order as the amount of likes each photo has
 allImages = soup.find_all('img')
 for img in allImages:
     if hasattr(img, 'attrs') and 'src' in img.attrs:
         if (str(img.attrs['src'])[0:10] == ('https://68')):
             imgLinks.append(str(img.attrs['src']))
 print(imgLinks)
+
+
+
+for i in range(len(listOfNotes)):
+    if (listOfNotes[i] > avgNotes):
+        DownloadLink = (imgLinks[listOfNotes])
+        FullFileName = os.path.join('Photos', ('img'+str(counter)+'.gif'))
+        urllib.request.urlretrieve(listOfNotes, FullFileName)
+        total += 1
