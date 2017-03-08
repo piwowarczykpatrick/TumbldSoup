@@ -4,16 +4,19 @@ import re
 import os
 import time
 import datetime
+from pathlib import Path
 
-#Input tags to analyze and scrape
+#Settings
 tagsToSearch = ['Drift','Streeto','180sx','jzx100','jzx110','326power']
 avgNotes = 100
+CycleMode = True
+hourInterval = 2
+
+
 indexOfPopularPosts = []
 listOfNotes = []
 imgLinks = []
 total = 0
-CycleMode = True
-hourInterval = 2
 now = datetime.datetime.now()
 dateAndTimeString = now.strftime("%Y-%m-%d %H:%M")
 
@@ -56,6 +59,8 @@ while CycleMode is True:
             if (listOfNotes[i] > avgNotes):
                 DownloadLink = (str(imgLinks[i]))
                 FullFileName = os.path.join('Photos', (tagsToSearch[tagSearch]+ '_'+str(total)+'.gif'))
-                urllib.request.urlretrieve(DownloadLink, FullFileName)
-                total += 1
+                myPath = Path("Photos/" +tagsToSearch[tagSearch]+ '_'+str(total)+'.gif')
+                if (myPath.is_file() is False): #TODO: Find different method of checking if exists
+                    urllib.request.urlretrieve(DownloadLink, FullFileName)
+                    total += 1
     time.sleep(hourInterval*3600)
