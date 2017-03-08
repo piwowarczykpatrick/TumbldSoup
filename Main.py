@@ -19,6 +19,8 @@ imgLinks = []
 total = 0
 now = datetime.datetime.now()
 dateAndTimeString = now.strftime("%Y-%m-%d %H:%M")
+imgLibrary = []
+creditsList = []
 
 while CycleMode is True:
     for tagSearch in range(len(tagsToSearch)):
@@ -30,19 +32,15 @@ while CycleMode is True:
         #find all posts that are images
         r = soup.find_all('article', class_="is_photo")
 
-        #david's code. I want it to grab just the value of data-count. It prints what I sent you.
+        #Building up list that contains the amount of popularity of each post
         for article in r:
               for tag in article.descendants:
                    if hasattr(tag, 'attrs') and 'data-count' in tag.attrs:
                        listOfNotes.append(int(tag.attrs['data-count']))
+                   if hasattr(tag, 'attrs') and 'data-tumblelog' in tag.attrs:
+                       creditsList.append(str(tag.attrs['data-tumblelog']))
+        #print(creditsList)
         #print(listOfNotes)
-
-
-        #Seperating popular content from content we don't want
-        for j in range(len(listOfNotes)):
-            if (listOfNotes[j] > avgNotes):
-                indexOfPopularPosts.append(j)
-                #print (j,listOfNotes[j])
 
 
         #Populating list of popular images in the same order as the amount of likes each photo has
@@ -60,7 +58,9 @@ while CycleMode is True:
                 DownloadLink = (str(imgLinks[i]))
                 FullFileName = os.path.join('Photos', (tagsToSearch[tagSearch]+ '_'+str(total)+'.gif'))
                 myPath = Path("Photos/" +tagsToSearch[tagSearch]+ '_'+str(total)+'.gif')
-                if (myPath.is_file() is False): #TODO: Find different method of checking if exists
+
+                if DownloadLink not in imgLibrary: #TODO: Find different method of checking if exists
                     urllib.request.urlretrieve(DownloadLink, FullFileName)
+                    imgLibrary.append(DownloadLink)
                     total += 1
     time.sleep(hourInterval*3600)
