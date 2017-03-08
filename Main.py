@@ -4,11 +4,9 @@ import re
 import os
 
 #Input tags to analyze and scrape
-tagsToSearch = 'drift'
-counter = 0
+tagsToSearch = 'Drift'
 avgNotes = 100
 indexOfPopularPosts = []
-j = 0
 listOfNotes = []
 imgLinks = []
 total = 0
@@ -44,10 +42,10 @@ for img in allImages:
 print(imgLinks)
 
 
-
+#Downloading Popular Content
 for i in range(len(listOfNotes)):
     if (listOfNotes[i] > avgNotes):
-        DownloadLink = (imgLinks[listOfNotes])
-        FullFileName = os.path.join('Photos', ('img'+str(counter)+'.gif'))
-        urllib.request.urlretrieve(listOfNotes, FullFileName)
+        DownloadLink = (str(imgLinks[i]))
+        FullFileName = os.path.join('Photos', (tagsToSearch+ '_'+str(total)+'.gif'))
+        urllib.request.urlretrieve(DownloadLink, FullFileName)
         total += 1
