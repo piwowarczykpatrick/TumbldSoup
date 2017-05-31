@@ -7,10 +7,11 @@ import datetime
 from pathlib import Path
 
 #Settings
-tagsToSearch = ['Drift','Streeto','180sx','jzx100','jzx110','326power']
+tagsToSearch = ['240sx']
 avgNotes = 100
 CycleMode = True
 hourInterval = 2
+run = False
 
 
 indexOfPopularPosts = []
@@ -21,9 +22,14 @@ now = datetime.datetime.now()
 dateAndTimeString = now.strftime("%Y-%m-%d %H:%M")
 imgLibrary = []
 creditsList = []
+def runScript():
+    print('@@@@@@ SETTINGS @@@@@@')
+    print(avgNotes)
+    print(CycleMode)
+    print(hourInterval)
 
-while CycleMode is True:
     for tagSearch in range(len(tagsToSearch)):
+        total = 0 #Reset filename count for each tag
         print('[' + dateAndTimeString + ']' + 'Crawling: ' +tagsToSearch[tagSearch])
         #searching the tags above
         urlToSearch =  urllib.request.urlopen('https://www.tumblr.com/search/' + tagsToSearch[tagSearch]).read()
@@ -32,14 +38,29 @@ while CycleMode is True:
         #find all posts that are images
         r = soup.find_all('article', class_="is_photo")
 
-        #Building up list that contains the amount of popularity of each post
+        #Building up list of authors
+
         for article in r:
-              for tag in article.descendants:
-                   if hasattr(tag, 'attrs') and 'data-count' in tag.attrs:
-                       listOfNotes.append(int(tag.attrs['data-count']))
-                   if hasattr(tag, 'attrs') and 'data-tumblelog' in tag.attrs:
-                       creditsList.append(str(tag.attrs['data-tumblelog']))
-        #print(creditsList)
+            breakdown = (article.a)
+            dict = breakdown.attrs
+            if (dict.get('title') is not None):
+                creditsList.append(dict.get('title'))
+            else:
+                creditsList.append('None')
+
+
+            # Building up list that contains the amount of popularity of each post
+
+            for tag in article.descendants:
+                if hasattr(tag, 'attrs') and 'data-count' in tag.attrs:
+                    listOfNotes.append(int(tag.attrs['data-count']))
+                    #creditsList.append(tag.attrs['data-tumblelog'])
+                if hasattr(tag, 'attrs') and 'post-info-tumblelog' in tag.attrs:
+                    creditsList.append(str(tag.attrs['name']))
+                    print(creditsList)
+                    print('hi')
+
+        print(creditsList)
         #print(listOfNotes)
 
 
@@ -56,11 +77,14 @@ while CycleMode is True:
         for i in range(len(listOfNotes)):
             if (listOfNotes[i] > avgNotes):
                 DownloadLink = (str(imgLinks[i]))
-                FullFileName = os.path.join('Photos', (tagsToSearch[tagSearch]+ '_'+str(total)+'.gif'))
+                FullFileName = os.path.join('/Users/patrickpiwowarczyk/Documents/Dropbox/Depaul/School/DamnDrifters', (tagsToSearch[tagSearch]+ '_'+str(total)+ '_Author: @' + creditsList[i]+'.gif'))
                 myPath = Path("Photos/" +tagsToSearch[tagSearch]+ '_'+str(total)+'.gif')
 
-                if DownloadLink not in imgLibrary: #TODO: Find different method of checking if exists
+                if DownloadLink not in imgLibrary:
                     urllib.request.urlretrieve(DownloadLink, FullFileName)
                     imgLibrary.append(DownloadLink)
                     total += 1
-    time.sleep(hourInterval*3600)
+    time.sleep(hourInterval * 3600)
+
+if CycleMode and run:
+    runScript()
