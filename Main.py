@@ -23,10 +23,10 @@ dateAndTimeString = now.strftime("%Y-%m-%d %H:%M")
 imgLibrary = []
 creditsList = []
 def runScript():
-    print('@@@@@@ SETTINGS @@@@@@')
-    print(avgNotes)
-    print(CycleMode)
-    print(hourInterval)
+    print('SETTINGS')
+    print('Average Notes: ', avgNotes)
+    print('Cycle Mode: ', CycleMode)
+    print('Hour Interval:', hourInterval)
 
     for tagSearch in range(len(tagsToSearch)):
         total = 0 #Reset filename count for each tag
@@ -68,7 +68,9 @@ def runScript():
         allImages = soup.find_all('img')
         for img in allImages:
             if hasattr(img, 'attrs') and 'src' in img.attrs:
-                if (str(img.attrs['src'])[0:10] == ('https://68')):
+                print('hello')
+                print(img)
+                if (str(img.attrs['src'])[0:10] == ('https://66')):
                     imgLinks.append(str(img.attrs['src']))
         print(imgLinks)
 
@@ -76,6 +78,7 @@ def runScript():
         #Downloading Popular Content
         for i in range(len(listOfNotes)):
             if (listOfNotes[i] > avgNotes):
+                print(imgLinks)
                 DownloadLink = (str(imgLinks[i]))
                 FullFileName = os.path.join('/Users/patrickpiwowarczyk/Documents/Dropbox/Depaul/School/DamnDrifters', (tagsToSearch[tagSearch]+ '_'+str(total)+ '_Author: @' + creditsList[i]+'.gif'))
                 myPath = Path("Photos/" +tagsToSearch[tagSearch]+ '_'+str(total)+'.gif')

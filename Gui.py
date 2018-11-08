@@ -13,15 +13,21 @@ stop = False
 tagsList = []
 
 def runEvent(event):
+    Main.CycleMode = False
     Main.tagsToSearch = tagsText.get().split(',')
     Main.run = True
     Main.avgNotes = int(notesText.get())
     Main.CycleMode = loop.get()
-    Main.hourInterval = int(hoursText.get())
-    print(notesText.get())
-    print(loop.get())
-    print(hoursText.get())
+    if hoursText.get() is not "" and loop.get() is False:
+        print('ERROR: Loop interval was given, but Loop Mode was disabled.')
+        return
+    if hoursText.get() is '':
+        Main.hourInterval = 0
+    else:
+        Main.hourInterval = int(hoursText.get())
     Main.runScript()
+
+
 
 def stopEvent(event):
     Main.CycleMode = False
@@ -34,8 +40,8 @@ tagsLabel = Label (root, text="Tags To Search: ")
 tagsText = Entry(root,text = 'Ex: 240sx,326power,drift')
 notesLabel = Label (root, text="Minimum Number of Notes: ",)
 notesText = Entry(root)
-loopBox = Checkbutton(root, text="Loop Mode?", variable = loop, onvalue = True, offvalue = False)
-hourLabel = Label (root, text="Loop Interval (In Hours): ")
+loopBox = Checkbutton(root, text="Loop Mode?", variable = loop,offvalue = False, onvalue = True)
+hourLabel = Label(root, text="Loop Interval (In Hours): ")
 hoursText = Entry(root)
 dirLabel = Label (root, text="Media Directory: ")
 #dirSelect = tkinter.filedialog.askdirectory(parent=root,initialdir="/",title='Pick a directory')
