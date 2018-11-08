@@ -22,6 +22,7 @@ now = datetime.datetime.now()
 dateAndTimeString = now.strftime("%Y-%m-%d %H:%M")
 imgLibrary = []
 creditsList = []
+
 def runScript():
     print('SETTINGS')
     print('Average Notes: ', avgNotes)
@@ -91,3 +92,5 @@ def runScript():
 
 if CycleMode and run:
     runScript()
+
+runScript()

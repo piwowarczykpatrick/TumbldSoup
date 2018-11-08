@@ -11,21 +11,23 @@ hours = None
 run = False
 stop = False
 tagsList = []
+useGui = False
 
-def runEvent(event):
-    Main.CycleMode = False
-    Main.tagsToSearch = tagsText.get().split(',')
-    Main.run = True
-    Main.avgNotes = int(notesText.get())
-    Main.CycleMode = loop.get()
-    if hoursText.get() is not "" and loop.get() is False:
-        print('ERROR: Loop interval was given, but Loop Mode was disabled.')
-        return
-    if hoursText.get() is '':
-        Main.hourInterval = 0
-    else:
-        Main.hourInterval = int(hoursText.get())
-    Main.runScript()
+if useGui:
+    def runEvent(event):
+        Main.CycleMode = False
+        Main.tagsToSearch = tagsText.get().split(',')
+        Main.run = True
+        Main.avgNotes = int(notesText.get())
+        Main.CycleMode = loop.get()
+        if hoursText.get() is not "" and loop.get() is False:
+            print('ERROR: Loop interval was given, but Loop Mode was disabled.')
+            return
+        if hoursText.get() is '':
+            Main.hourInterval = 0
+        else:
+            Main.hourInterval = int(hoursText.get())
+        Main.runScript()
 
 
 
